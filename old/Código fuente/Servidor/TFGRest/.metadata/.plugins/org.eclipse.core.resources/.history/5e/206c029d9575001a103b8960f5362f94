@@ -1,0 +1,55 @@
+package modelo;
+
+import java.util.List;
+
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+
+import dao.LineaDAO;
+import dao.ProfesorDAO;
+import dao.SessionUtil;
+
+public class Prueba {
+	
+	public static void main(String[] args) {
+		
+		Profesor profesor = new Profesor();
+		profesor.setNombre("Jorge");
+		profesor.setApellidos("Lopez Hernandez");
+		profesor.setUsuario("jorge-ls94");
+		profesor.setContraseña("143434");
+		
+		ProfesorDAO profesorDAO = new ProfesorDAO();
+		profesorDAO.addProfesor(profesor);
+		
+		List<Profesor> profesores = profesorDAO.getProfesores();
+		for (Profesor profesor2 : profesores) {
+			System.out.println("Profesor");
+			System.out.println();
+			System.out.println("Id: "+profesor2.getId());
+			System.out.println("Nombre: "+profesor2.getNombre());
+			System.out.println("Apellidos: "+profesor2.getApellidos());
+			System.out.println("Usuario: "+profesor2.getUsuario());
+			System.out.println("Contraseña: "+profesor2.getContraseña());
+			System.out.println();
+		}
+		
+	    Profesor prof = profesores.get(1);
+		prof.setNombre("Paco");
+		prof.setApellidos("Martinez");
+		prof.setUsuario("pacom");
+		prof.setContraseña("656767");
+		
+		LineaDAO lineaDAO = new LineaDAO();
+		Linea linea = new Linea();
+		linea.setTitulo("Aplicacion web responsive");
+		linea.setDescripcion("En este tfg se desarrollara una app responsive...");
+		linea.setTipoLinea(TipoLinea.ACUERDO_ESTUDIANTE);
+		lineaDAO.addLinea(linea);
+		
+		prof.getLineas().add(linea);
+		profesorDAO.updateProfesor(prof.getId(),prof);
+
+	}
+
+}

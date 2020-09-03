@@ -1,0 +1,70 @@
+package services;
+
+import java.io.IOException;
+import java.security.Key;
+import java.util.Date;
+
+import javax.annotation.Priority;
+import javax.ws.rs.NotAuthorizedException;
+import javax.ws.rs.Priorities;
+import javax.ws.rs.container.ContainerRequestContext;
+import javax.ws.rs.container.ContainerRequestFilter;
+import javax.ws.rs.core.HttpHeaders;
+
+import javax.ws.rs.core.Response;
+import javax.ws.rs.ext.Provider;
+
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.impl.crypto.MacProvider;
+
+
+@Provider
+@Secured
+@Priority(Priorities.AUTHENTICATION)
+public class RestSecurityFilter implements ContainerRequestFilter {
+	
+	//public static final Key KEY = MacProvider.generateKey();
+
+	@Override
+	public void filter(ContainerRequestContext requestContext) throws IOException {
+		String authorizationHeader = requestContext.getHeaderString(HttpHeaders.AUTHORIZATION);
+		try {
+        	
+			// Check if the HTTP Authorization header is present and formatted correctly 
+	        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+	            throw new NotAuthorizedException("Authorization header must be provided");
+	        }
+	        // Extrae el token de la cabecera
+            String token = authorizationHeader.substring("Bearer".length()).trim();
+            // Valida el token utilizando la cadena secreta
+            Jws<Claims> claims = Jwts.parser().setSigningKey(MyResource.clave).parseClaimsJws(token);
+            System.out.println(claims.getBody().toString());
+            int idProfesor = (Integer) claims.getBody().get("idProfesor");
+            //Date expireDate = (Date) claims.getBody().get("exp");
+            String urlRequest = requestContext.getUriInfo().getAbsolutePath().toString();
+            //System.out.println("Url: "+urlRequest);
+            int beginIndex = urlRequest.indexOf("profesores");
+            String subString = urlRequest.substring(beginIndex);
+            String arrayUrl[] = subString.split("/");
+            int idProfesorUrl = Integer.parseInt(arrayUrl[1]);
+            Date currentDate = new Date();
+            //System.out.println("Filter: La fecha de expiracion es: "+expireDate.toString());
+            //Se comprueba si el id del payload es igual al id enviado en la url de la peticion
+            if (idProfesor != idProfesorUrl){
+            	requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).build());
+            }
+            //Se comprueba si el token ha caducado
+            /*else if (currentDate.compareTo(expireDate) >= 0){
+            	requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).build());
+            }*/
+            
+        } catch (Exception e) {
+        	System.out.println("Unauthorized exception");
+            requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).build());
+        
+        }
+
+	}
+}

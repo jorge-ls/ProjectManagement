@@ -1,0 +1,90 @@
+package dao;
+
+import java.util.List;
+
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+
+import modelo.Reunion;
+
+public class ReunionHibernateDAO implements ReunionDAO {
+	
+	public void addReunion(Reunion bean){
+        Session session = SessionUtil.getSession();        
+        Transaction tx = session.beginTransaction();
+        addReunion(session,bean);        
+        tx.commit();
+        session.close();
+        
+    }
+    
+    public void addReunion(Session session, Reunion bean){
+        Reunion reunion = new Reunion();
+        
+        reunion.setTipoReunion(bean.getTipoReunion());
+        reunion.setFecha(bean.getFecha());
+        reunion.setMinutos(bean.getMinutos());
+        reunion.setUrlMemoria(bean.getUrlMemoria());
+        if (!bean.getComentario().equals("")){
+        	reunion.setComentario(bean.getComentario());
+        }
+        reunion.setEstudiante(bean.getEstudiante());
+        session.save(reunion);
+    }
+    
+    public Reunion getReunion (int id){
+	   	 Session session = SessionUtil.getSession();
+	   	 String hql = "from Reunion where id = :id";
+	     Query query = session.createQuery(hql);
+	     query.setInteger("id",id);
+	     Reunion reunion = (Reunion) query.list().get(0);
+	     session.close();
+	     return reunion;
+   }
+    
+    public List<Reunion> getReuniones(){
+        Session session = SessionUtil.getSession();    
+        Query query = session.createQuery("from Reunion");
+        List<Reunion> reuniones = query.list();
+        session.close();
+        return reuniones;
+    }
+    
+ 
+    public int deleteReunion(int id) {
+        Session session = SessionUtil.getSession();
+        Transaction tx = session.beginTransaction();
+        String hql = "delete from Reunion where id = :id";
+        Query query = session.createQuery(hql);
+        query.setInteger("id",id);
+        int rowCount = query.executeUpdate();
+        System.out.println("Rows affected: " + rowCount);
+        tx.commit();
+        session.close();
+        return rowCount;
+    }
+    
+    public int updateReunion(int id, Reunion reunion){
+         if(id <=0)  
+           return 0;  
+         Session session = SessionUtil.getSession();
+         Transaction tx = session.beginTransaction();
+         String hql = "update Reunion set tipoReunion = :tipoReunion, fecha = :fecha, "
+            + "minutos = :minutos, urlMemoria = :urlMemoria, comentario = :comentario "
+            + "where id = :id";
+         Query query = session.createQuery(hql);
+         query.setInteger("id",id);
+         query.setString("tipoReunion",reunion.getTipoReunion().toString());
+         query.setDate("fecha",reunion.getFecha());
+         query.setInteger("minutos",reunion.getMinutos());
+         query.setString("urlMemoria", reunion.getUrlMemoria());
+         query.setString("comentario", reunion.getComentario());
+         int rowCount = query.executeUpdate();
+         System.out.println("Rows affected: " + rowCount);
+         tx.commit();
+         session.close();
+         return rowCount;
+    }
+
+}

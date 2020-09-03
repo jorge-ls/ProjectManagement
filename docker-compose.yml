@@ -1,0 +1,29 @@
+version: '3'
+services:
+  db:
+    image: mysql:5.7
+    container_name: mysql_tfg
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: tfg
+      MYSQL_USER: tfg-user
+      MYSQL_PASSWORD: tfg-user
+    ports:
+      - "3306:3306"
+    volumes:
+    - ./db:/docker-entrypoint-initdb.d
+
+  web:
+    image: tomcat:latest
+    ports:
+    - "8080:8080"
+    volumes:
+    - ./tomcat:/usr/local/tomcat/webapps
+    links:
+      - db
+ 
+  adminer:
+    image: adminer:latest
+    ports:
+      - "80:8080"
+

@@ -1,0 +1,170 @@
+package dao;
+
+
+import java.io.File;
+import java.util.List;
+
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+
+import modelo.EstadoTrabajo;
+import modelo.Estudiante;
+import modelo.Fichero;
+import modelo.Linea;
+import modelo.Profesor;
+
+
+public class EstudianteHibernateDAO implements EstudianteDAO {
+	
+		 public void addEstudiante(Estudiante bean){
+			 Session session = SessionUtil.getSession();        
+			 Transaction tx = session.beginTransaction();
+			 addEstudiante(session,bean);        
+			 tx.commit();
+			 session.close();      
+		 }
+	    
+	    public void addEstudiante(Session session, Estudiante bean){
+	        Estudiante estudiante = new Estudiante();
+	        
+	        estudiante.setNombre(bean.getNombre());
+	        estudiante.setApellidos(bean.getApellidos());
+	        estudiante.setFechaEstimada(bean.getFechaEstimada());
+	        estudiante.setUrlGit(bean.getUrlGit());
+	        estudiante.setLinea(bean.getLinea());
+	        estudiante.setEstadoTrabajo(EstadoTrabajo.PENDIENTE);
+	        
+	        session.save(estudiante);
+	    }
+	    
+	    public Estudiante getEstudiante (int id){
+	    	 Session session = SessionUtil.getSession();
+	    	 String hql = "from Estudiante where id = :id";
+	         Query query = session.createQuery(hql);
+	         query.setInteger("id",id);
+	         Estudiante estudiante = (Estudiante) query.list().get(0);
+	         int minutos = this.getMinutosTotales(session,id);
+	         estudiante.setMinutosTotales(minutos);
+	         session.close();
+	         return estudiante;
+	    }
+	 
+	    public List<Estudiante> getEstudiantes(){
+	        Session session = SessionUtil.getSession();    
+	        Query query = session.createQuery("from Estudiante");
+	        List<Estudiante> estudiantes =  query.list();
+	        session.close();
+	        return estudiantes;
+	    }
+	    
+	    public int getMinutosTotales(Session session, int idEstudiante){
+	    	String hql = "select minutos from Reunion where estudiante = :idEstudiante ";
+	    	Query query = session.createQuery(hql);
+			query.setInteger("idEstudiante",idEstudiante);
+			List<Integer> tiempos = query.list();
+			int tiempoTotal = 0;
+			for (Integer tiempo : tiempos) {
+				tiempoTotal += tiempo;
+			}
+			return tiempoTotal;
+	    }
+	    
+	    public List<Estudiante> getEstudiantesLinea(int idLinea){
+	    	Session session = SessionUtil.getSession();
+	    	String hql = "from Estudiante where linea = :linea";
+	    	Query query = session.createQuery(hql);
+	    	query.setInteger("linea",idLinea);
+	    	List<Estudiante> estudiantes = query.list();
+	    	for (Estudiante estudiante : estudiantes) {
+				int tiempoTotal = this.getMinutosTotales(session,estudiante.getId());
+				estudiante.setMinutosTotales(tiempoTotal);
+			}
+	    	return estudiantes; 
+	    }
+	 
+	    public int deleteEstudiante(int id) {
+	    	Estudiante estudiante = this.getEstudiante(id);
+	    	if (estudiante.getEstadoTrabajo() == EstadoTrabajo.ENTREGADO){
+	    		String urlInforme = estudiante.getInforme();
+	    		File informe = new File(urlInforme);
+	    		if (informe.exists()){
+	    			informe.delete();
+	    		}
+	    		String urlMemoria = estudiante.getMemFinal();
+	    		File memFinal = new File(urlMemoria);
+	    		if (memFinal.exists()){
+	    			memFinal.delete();
+	    		}
+	    	}
+	        Session session = SessionUtil.getSession();
+	        Transaction tx = session.beginTransaction();
+	        String hql = "delete from Estudiante where id = :id";
+	        Query query = session.createQuery(hql);
+	        query.setInteger("id",id);
+	        int rowCount = query.executeUpdate();
+	        System.out.println("Rows affected: " + rowCount);
+	        tx.commit();
+	        session.close();
+	        return rowCount;
+	    }
+	    
+	    public int updateEstudiante(int id, Estudiante estudiante){
+	         	if(id <=0)  
+	               return 0;
+	         	Session session = SessionUtil.getSession();
+	            Transaction tx = session.beginTransaction();
+	            Query query;
+	            String hql = "update Estudiante set nombre = :nombre, apellidos= :apellidos, "
+	            		+ "urlGit = :urlGit, fechaEstimada = :fechaEstimada, vocales = :vocales, "
+	            		+ "urlInforme = :urlInforme, urlMemoriaFinal = :urlMemoriaFinal "
+	            		+ "where id = :id";
+	            query = session.createQuery(hql);
+	            query.setInteger("id",id);
+	            query.setString("nombre",estudiante.getNombre());
+		        query.setString("apellidos",estudiante.getApellidos());
+		        query.setString("urlGit", estudiante.getUrlGit());
+		        query.setDate("fechaEstimada", estudiante.getFechaEstimada());
+		        query.setString("vocales", estudiante.getVocales());
+ 	            query.setString("urlInforme", estudiante.getUrlInforme());
+ 	            query.setString("urlMemoriaFinal", estudiante.getUrlMemoriaFinal());
+	            int rowCount = query.executeUpdate();
+	            System.out.println("Rows affected: " + rowCount);
+	            tx.commit();
+	            session.close();
+	            return rowCount;
+	    }
+	    
+	    public int calificarEstudiante(int id, Estudiante estudiante){
+	    	if(id <=0)  
+	           return 0;
+	    	Session session = SessionUtil.getSession();
+            Transaction tx = session.beginTransaction();
+            String memFinal = estudiante.getMemFinal();
+            String informe = estudiante.getInforme();
+            Fichero fichero = new Fichero();
+            String filePath;
+            if (memFinal != null){
+            	filePath = fichero.guardarFichero(memFinal);
+            	estudiante.setUrlMemoriaFinal(filePath);
+            }
+            if (informe != null){
+            	filePath = fichero.guardarFichero(informe);
+            	estudiante.setUrlInforme(filePath);
+            }
+            String hql = "update Estudiante set vocales = :vocales, urlInforme = :urlInforme, "
+            		+ "urlMemoriaFinal = :urlMemoriaFinal, estadoTrabajo = :estadoTrabajo "
+            		+ "where id = :id";
+            Query query = session.createQuery(hql);
+            query.setInteger("id",id);
+            query.setString("vocales",estudiante.getVocales());
+            query.setString("urlInforme",estudiante.getUrlInforme());
+            query.setString("urlMemoriaFinal", estudiante.getUrlMemoriaFinal());
+            query.setString("estadoTrabajo",estudiante.getEstadoTrabajo().toString());
+            int rowCount = query.executeUpdate();
+            System.out.println("Rows affected: " + rowCount);
+            tx.commit();
+            session.close();
+            return rowCount;
+	    }
+}

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login de usuario</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/login.js"></script>
+    <link rel="stylesheet" href="css/login.css">
+</head>
+<body class="main-container justify-content-center">
+            <div class="container">
+                <div class="row justify-content-center align-items-center main-row">
+                        <form id="login-profesor" class="col-12 col-sm-9 col-md-7 col-lg-6 col-xl-5 login-box" method="post" action="index.html">
+                            <h1 class="col-12 text-center display-4">Project Manager</h1>
+                            <div class="row justify-content-center form-group form-input">
+                                <label class="col-form-label col-10 col-lg-8 login-box__label" for="username">Usuario</label>
+                                <input class="form-control col-10 col-lg-8 login-box__input" type="text" id="username" required>
+                            </div>
+                            <div class="row justify-content-center form-group form-input">
+                                <label class="col-form-label col-10 col-lg-8 login-box__label" for="userpass">Contraseña</label>
+                                <input class="form-control col-10 col-lg-8 login-box__input" type="password" id="userpass" required>
+                            </div>
+                            <div id="feedback-login" class="row justify-content-center">
+                                <p class="col-10 col-lg-8 text-center">Las credenciales introducidas no son válidas</p>
+                                <p class="col-10 col-lg-8 text-center">Intentelo de nuevo</p>
+                            </div>   
+                            <div class="row justify-content-center container-bottoms">
+                                <input class="col-7 col-lg-4 btn btn-outline-success form-btn" type="submit" value="Iniciar sesión">
+                                <a class="col-12 col-lg-12 login-link" href="registro.html">¿Todavia no tienes una cuenta? Registrate</a>
+                            </div>
+                        </form>
+                    </div>
+            </div>
+</body>
+</html>

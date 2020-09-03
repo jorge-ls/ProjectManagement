@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página principal</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/shared.css">
+    <link rel="stylesheet" href="css/main.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/index.js"></script>
+    <script src="js/header.js"></script>
+    <script src="js/paginathing.js"></script>
+</head>
+<body>
+    <header class="main-header">
+        <nav class="navbar navbar-dark bg-dark justify-content-between">
+            <div>
+                <a href="index.html" class="navbar-brand">
+                    <!-- <img src="images/logo.png" alt="logo"> -->
+                    Project Manager
+                </a>
+            </div>
+            <a id="btn-logout" class="btn btn-outline-success botton-container__input btn-logout" href="login.html">Logout</a>
+        </nav>
+    </header>
+    <main class="container">
+        <section>
+            <div class="row section-profesor justify-content-center">
+                <h1 class="col-12 col-sm-12 col-md-12 col-lg-12 display-4 section-profesor__title">Profesor</h1>
+                <hr class="col-6 col-sm-4 col-md-3 col-lg-4 col-xl-3 bg-success">
+                <h4 id="nombre-profesor" class="col-12 col-sm-12 col-md-12 col-lg-12 section-profesor__name"></h4>
+            </div>   
+        </section>
+        <section class="list-section">
+            <div class="row justify-content-center align-items-center text-center title-container">
+                <h1 class="col-12 col-sm-7 col-md-7 col-lg-7 display-4">Líneas de TFG/TFM</h1>
+                <hr class="col-9 col-sm-7 col-md-7 col-lg-6 bg-success">   
+            </div>
+            <div id="lista-lineas" class="row justify-content-center container-list">
+                <!-- <div class="col-10 col-sm-10 col-md-10 col-lg-10 bg-dark text-white container-list__item">
+                    <div class="row align-items-center my-row">
+                        <h4 class="col-12 col-sm-7 col-md-6 col-lg-6 col-xl-7 entry-title">Aplicacion web responsive para gestion de eventos <strong>(2/3)</strong></h4>
+                        <div class="col-12 col-sm-4 col-md-5 col-lg-5 col-xl-4 my-col">
+                            <div class="row botton-container">
+                                <a class="col-5 col-sm-12 col-md-5 col-lg-5 btn btn-outline-success botton-container__input" href="consultaTFG.html">Ver detalles</a>
+                                <button class="col-5 col-sm-12 col-md-5 btn btn-outline-success botton-container__input" type="button"
+                                    data-toggle="modal" data-target="#eliminarLinea">Eliminar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-10 col-sm-10 col-md-10 col-lg-10 bg-dark text-white container-list__item">
+                    <div class="row align-items-center my-row">
+                        <h4 class="col-12 col-sm-7 col-md-6 col-lg-6 col-xl-7 entry-title">Linea de TFG 2 <strong>(2/4)</strong></h4>
+                        <div class="col-12 col-sm-4 col-md-5 col-lg-5 col-xl-4 my-col">
+                            <div class="row botton-container">
+                                <a class="col-5 col-sm-12 col-md-5 col-lg-5 btn btn-outline-success botton-container__input" href="consultaTFG.html">Ver detalles</a>
+                                <button class="col-5 col-sm-12 col-md-5 btn btn-outline-success botton-container__input" type="button"
+                                    data-toggle="modal" data-target="#eliminarLinea">Eliminar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
+            </div>
+            <div class="col-12 container-list__btn">
+                <a class="col-6 col-sm-4 col-md-3 col-lg-3 col-xl-2 btn btn-sm btn-success mx-2 botton-container__input" href="registroTFG.html">Crear nueva línea</a>
+            </div>
+        </section>
+    </main>
+    <footer class="main-footer page-footer text-center">
+        <p>Desarrollado por Jorge Lopez Saura</p>
+    </footer>
+
+    <div id="eliminarLinea" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+        <div class="modal-dialog ">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title text-center">¿Seguro que desea eliminar la línea seleccionada?</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p>Si elimina la línea se borraran todos los datos asociados</p>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button id="button-eliminar" type="button" class="btn btn-success modal-btn botton-container__input" data-dismiss="modal">Eliminar</button>
+                  </div>
+            </div>
+        </div>
+    </div>
+    
+    
+</body>
+</html>

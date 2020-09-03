@@ -1,0 +1,378 @@
+* {
+    box-sizing: border-box;
+}
+
+.title-container {
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+body {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+main {
+    flex: 1;
+    flex-shrink: 1;
+}
+
+
+.flex-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.main-footer {
+    background: #212529;
+    color: white;
+}
+
+
+.list-section {
+    margin-bottom: 6.2rem;
+}
+
+
+.form-section {
+    margin-bottom: 5rem;
+    margin-top: 6rem;
+}
+
+/* .boton-file {
+    margin-left: .2rem;
+} */
+
+/* .form-group {
+    justify-content: center;
+} */
+
+.container-list__item {
+   /*  display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    /* justify-content: space-between;
+    align-items: center; */
+    color: white;
+    border-radius: 5px;
+    padding: 0.93rem;
+    margin: 0.5rem;
+    /* position: relative; */
+}
+
+.container-list__btn {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 1.5rem;
+}
+
+/* .modal-content {
+    text-align: center;
+} */
+
+
+.botton-container__input, .btn-form {
+    margin-left: 0.3rem;
+    margin-right: 0.3rem;
+    /* padding-left: 1.5rem;
+    padding-right: 1.5rem; */
+    padding: 0.5rem;
+}
+
+.section-profesor {
+    margin-top: 6.2rem;
+    margin-bottom: 3.1rem;
+}
+
+.section-profesor__title {
+    margin-bottom: 0;
+}
+
+
+.time-row {
+    /* padding-left: 0.12rem; */
+    margin-bottom: 1rem;
+}
+
+ .file-input {
+    padding-left: 0;
+    margin-left: 0;
+} 
+
+.entry-title {
+    color: white;
+}
+
+.input-calificar {
+    display: none;
+}
+
+.section-profesor__name, .section-profesor__title {
+    text-align: center;
+}
+
+
+@media (max-width: 576px) {
+    .section-profesor__name, .section-profesor__title {
+        font-size: 1rem;
+        text-align: center;
+    }
+    .aux-title {
+        margin-bottom: 0;
+    }
+    .display-4 {
+        font-size: 2em;
+    }
+    .entry-title {
+        font-size: 1rem;
+        margin-bottom: 1rem;  
+        margin-right: auto;
+    }
+    .estado-estudiante {
+        margin-bottom: 1.5rem;
+    }
+    .container-list__item {
+        justify-content: center;
+    }
+    .container-list__item div {
+        text-align: center;
+        width: 100%;
+    } 
+    .botton-container {
+        justify-content: center;
+        margin-left: 0;
+    }
+
+    .form-group__label {
+        font-size: 0.875rem;
+        /* padding-left: 2rem; */
+    }
+    .form-group__input {
+        /* border-color: #212529; */
+        margin-left: 1rem;
+        height: calc(1.5em + .5rem + 2px);
+        padding: .25rem .5rem;
+        font-size: .875rem;
+    }
+    .estado-proyecto {
+        padding-left: 0;
+    }
+    .form-group {
+        margin-left: 0.5rem;
+        margin-right: 0.5rem;
+        justify-content: center;
+    }
+    .time-row h4 {
+        font-size: 1rem;
+    }
+    .btn-calificar {
+        margin-top: 1rem;
+    }
+    .botton-container__input {
+        font-size: 0.875rem;
+        padding: 0.3rem;
+    }
+    .modal-title {
+        font-size: 1rem;
+    }
+    .modal-body p {
+        font-size: .8rem;
+    }
+    .modal-btn {
+        font-size: 0.875rem;
+        padding: 0.3rem;
+    }
+    .my-row {
+        margin: 0;
+    }
+    .main-footer p {
+        font-size: 0.875rem;
+    }
+    /* .valid-feedback, .invalid-feddback {
+        margin-left: 1rem;
+    } */
+    .offset-1 {
+        margin-left: 10.5%;
+    }
+
+
+}
+
+@media (min-width: 576px) and (max-width: 768px){
+    .section-profesor__name {
+        font-size: 1rem;
+        text-align: center;
+    }
+    .display-4 {
+        font-size: 2rem;
+        text-align: center;
+    }
+    .form-group__label {
+        font-size: 0.875rem;
+        /* padding-left: 2rem; */
+    }
+    .form-group__input {
+        /* border-color: #212529; */
+        /* margin-left: 1rem; */
+        height: calc(1.5em + .5rem + 2px);
+        padding: .25rem .5rem;
+        font-size: .875rem;
+    }
+    .botton-container__input {
+        font-size: 0.875rem;
+        padding: 0.3rem;
+        margin-bottom: .5rem;
+    }
+    .btn-logout {
+        margin-bottom: 0;
+    }
+    .form-section {
+        margin-bottom: 3.1rem;
+    }
+    .entry-title {
+        font-size: 1rem;   
+    }
+    .time-row h4 {
+        font-size: 1rem;
+    }
+    .modal-title {
+        font-size: 1rem;
+    }
+    .modal-body p {
+        font-size: .8rem;
+    }
+    .main-footer p {
+        font-size: 1rem;
+    }
+}
+
+
+@media (min-width: 768px) and (max-width: 992px){
+    .display-4 {
+        font-size: 2.5rem;
+    }
+    .form-group__label {
+        font-size: 1rem;
+    }
+    .entry-title {
+        font-size: 1.2rem;
+        /* text-align: center;    */
+        margin-right: auto;
+    }
+    .section-profesor__name {
+        font-size: 1.5rem;
+    }
+    .form-group__input {
+        /* border-color: #212529; */
+        height: calc(1.5em + .75rem + 2px);
+        padding: .375rem .75rem;
+        font-size: 1rem;
+    }
+    .botton-container__input {
+        font-size: 1rem;
+        padding: .375rem .5rem;
+    }
+    .time-row h4 {
+        font-size: 1.2rem;
+    }
+    .main-footer p {
+        font-size: 1.2rem;
+    }
+    
+}
+
+@media (min-width: 992px) and (max-width: 1200px){
+    .display-4 {
+        font-size: 3rem;
+    }
+    .form-group__label {
+        padding-top: calc(.5rem + 1px);
+        padding-bottom: calc(.5rem + 1px);
+        font-size: 1.25rem;
+        line-height: 1.5;
+    }
+    .form-group__input {
+        height: calc(1.5em + 1rem + 2px);
+        padding: .5rem 1rem;
+        font-size: 1.25rem;
+        line-height: 1.5;
+        border-radius: .3rem;
+    }
+    .entry-title {
+        font-size: 1.5rem;
+        /* text-align: center;    */
+        margin-right: auto;
+    }
+    .botton-container__input {
+        font-size: 1.12rem;
+        padding: 0.6rem 1rem;
+        margin-left: 0.3rem;
+        margin-right: 0.3rem;
+    }
+    .section-profesor__name{
+        font-size: 1.5rem;
+    }
+    .modal-dialog {
+        max-width: 800px;
+    }
+    .modal-title {
+        font-size: 1.2rem;
+    }
+    .modal-body p {
+        font-size: 1rem;
+    }
+    .main-footer p {
+        font-size: 1.5rem;
+    }
+}
+
+@media (min-width: 1200px) {
+    .display-4 {
+        font-size: 3rem;
+    }
+    .form-group__label {
+        padding-top: calc(.5rem + 1px);
+        padding-bottom: calc(.5rem + 1px);
+        font-size: 1.25rem;
+        line-height: 1.5;
+    }
+    .form-group__input {
+        height: calc(1.5em + 1rem + 2px);
+        padding: .5rem 1rem;
+        font-size: 1.25rem;
+        line-height: 1.5;
+        border-radius: .3rem;
+    }
+    .botton-container__input {
+        font-size: 1.12rem;
+        padding: 0.5rem;
+        text-align: center;
+        vertical-align: middle;
+    }
+    .modal-dialog {
+        max-width: 800px;
+    }
+    .modal-title {
+        font-size: 1.5rem;
+    }
+    .modal-body p {
+        font-size: 1.2rem;
+    }
+    /* .btn-aux {
+        text-align: center;
+        vertical-align: middle;
+        padding: .5rem;
+    } */
+    .entry-title {
+        font-size: 1.5rem;
+        /* text-align: center;    */
+        /* margin-right: auto; */
+    }
+    .main-footer p {
+        font-size: 1.5rem;
+    }
+
+}

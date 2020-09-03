@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro reunión</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/shared.css">
+    <link rel="stylesheet" href="css/main.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/registroReunion.js"></script>
+    <script src="js/validation.js"></script>
+    <script src="js/header.js"></script>
+</head>
+<body>
+        <header class="main-header">
+            <nav class="navbar navbar-dark bg-dark justify-content-between">
+                <div>
+                    <a href="index.html" class="navbar-brand">
+                        <!-- <img src="" alt="logo"> -->
+                        Project Manager
+                    </a>
+                </div>
+                <a id="btn-logout" class="btn btn-outline-success botton-container__input btn-logout" href="login.html">Logout</a>
+            </nav>
+        </header>
+        <main class="container">
+            <div class="form-section">
+                <div class="row justify-content-center align-items-center text-center title-container">
+                    <h1 class="col-sm-6 col-md-7 display-4">Nueva reunión</h1>
+                    <hr class="col-9 col-sm-6 col-md-7 col-xl-6 bg-success">    
+                </div>
+                <div class="row justify-content-center align-items-center main-row">
+                <div class="form-box col-sm-12 col-md-10">
+                    <form id="registro-reunion" class="form-container" method="post" action="consultaEstudiante.html" novalidate>
+                        <div class="row form-group">
+                            <label class="col-form-label col-10 col-sm-5 col-md-5 col-lg-5 form-group__label" for="titulo" >Titulo *</label>
+                            <input type="text" class="form-control col-10 col-sm-6 col-md-7 col-lg-7 form-group__input" id="titulo" required></textarea>
+                            <div id="feedback-reunion" class="valid-feedback offset-1 offset-sm-5 offset-md-5 offset-lg-5">Campo válido</div>
+                        </div>
+                        <div class="row form-group">
+                            <label class="col-form-label col-10 col-sm-5 col-md-5 col-lg-5 form-group__label" for="tipoReunion">Tipo de la reunión *</label>
+                            <select class="form-control col-10 col-sm-6 col-md-7 col-lg-7 form-group__input" id="tipoReunion" required> 
+                                <option value="PRESENCIAL">Presencial</option>
+                                <option value="CORREO">Correo</option>
+                                <option value="SKYPE">Skype</option>
+                                <option value="OTROS">Otros</option>
+                            </select>
+                            <div id="feedback-tipo" class="valid-feedback offset-1 offset-sm-5 offset-md-5 offset-lg-5">Campo válido</div>
+                        </div>
+                        <div class="row form-group">
+                            <label class="col-form-label col-10 col-sm-5 col-md-5 col-lg-5 form-group__label" for="fecha" >Fecha de realización *</label>
+                            <input type="date" class="form-control col-10 col-sm-6 col-md-7 col-lg-7 form-group__input" id="fecha" required></textarea>
+                            <div id="feedback-fecha" class="valid-feedback offset-1 offset-sm-5 offset-md-5 offset-lg-5">Campo válido</div>
+                        
+                        </div>
+                        <div class="row form-group">
+                            <label class="col-form-label col-10 col-sm-5 col-md-5 col-lg-5 form-group__label" for="duracion">Duración (minutos) *</label>
+                            <input class="form-control col-10 col-sm-6 col-md-7 col-lg-7 form-group__input" type="number" id="duracion" required>
+                            <div id="feedback-duracion" class="valid-feedback offset-1 offset-sm-5 offset-md-5 offset-lg-5">Campo válido</div>
+                            
+                        </div>
+                        <div class="row form-group">
+                            <label class="col-form-label col-10 col-sm-5 col-md-5 col-lg-5 form-group__label" for="memoria">Memoria realizada *</label>
+                            <input class="form-control-file border file-input col-10 col-sm-6 col-md-7 col-lg-7 form-group__input" type="file" id="memoria" required>
+                            <div id="feedback-memoria" class="valid-feedback offset-1 offset-sm-5 offset-md-5 offset-lg-5">Campo válido</div>
+                            
+                        </div>
+                        <div class="row form-group">
+                            <label class="col-form-label col-10 col-sm-5 col-md-5 col-lg-5 form-group__label" for="comentario">Comentario</label>
+                            <textarea class="form-control col-10 col-sm-6 col-md-7 col-lg-7 form-group__input" id="comentario" cols="40" rows="5"></textarea>
+                            <div id="feedback-comentario" class="valid-feedback offset-1 offset-sm-5 offset-md-5 offset-lg-5">Campo válido</div>
+                        
+                        </div>
+                        <div class="row mt-5 justify-content-center botton-container">    
+                            <input class="col-4 col-sm-3 col-md-3 col-lg-3 col-xl-2 btn btn-success botton-container__input" type="submit" value="Registrar">
+                            <a class="col-4 col-sm-3 col-md-3 col-lg-3 col-xl-2 btn btn-success botton-container__input" href="consultaEstudiante.html">Cancelar</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        </main>
+        <footer class="main-footer page-footer text-center">
+            <p>Desarrollado por Jorge Lopez Saura</p>
+        </footer>
+
+        <div id="success-reunion" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title text-center">Enhorabuena</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Se ha registrado la nueva reunion correctamente</p>
+                    </div>
+                    <div class="modal-footer justify-content-center">
+                        <button type="button" class="btn btn-success modal-btn botton-container__input" data-dismiss="modal">Aceptar</button>
+                      </div>
+                </div>
+            </div>
+        </div>
+</body>
+</html>

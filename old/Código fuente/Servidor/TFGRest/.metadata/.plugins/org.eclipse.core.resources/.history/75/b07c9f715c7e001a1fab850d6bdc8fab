@@ -1,0 +1,233 @@
+package services;
+ 
+import java.util.List;
+ 
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.UriInfo;
+
+import dao.EstudianteDAO;
+import dao.FactoriaDAO;
+import dao.LineaDAO;
+import dao.ProfesorDAO;
+import dao.ReunionDAO;
+import modelo.EstadoTrabajo;
+import modelo.Estudiante;
+import modelo.Linea;
+import modelo.Profesor;
+import modelo.Reunion;
+ 
+
+@Path("/profesores")
+public class MyResource {
+	
+	private FactoriaDAO factoria = FactoriaDAO.getInstancia(FactoriaDAO.HIBERNATE);
+ 
+	@POST
+	//@Path("/create")
+    @Consumes("application/json")
+    public Response addProfesor(Profesor profesor){
+        ProfesorDAO profesorDAO = factoria.getProfesorDAO();
+        profesorDAO.addProfesor(profesor);
+        return Response.ok().build();
+    }
+	
+    @GET
+    @Path("/{idProfesor}")
+    @Produces("application/json")
+    public Response getProfesor(@PathParam("idProfesor") int id) {
+        ProfesorDAO profesorDAO = factoria.getProfesorDAO();
+        Profesor profesor = profesorDAO.getProfesor(id);
+        return Response.status(Status.OK).entity(profesor).build();
+    }
+    
+    @POST
+    @Path("/{idProfesor}/lineas")
+    @Consumes("application/json")
+    public Response addLinea(@PathParam("idProfesor") int id,Linea linea) {
+    	LineaDAO lineaDAO = factoria.getLineaDAO();
+    	ProfesorDAO profesorDAO = factoria.getProfesorDAO();
+    	Profesor profesor = profesorDAO.getProfesor(id);
+    	linea.setProfesor(profesor);
+    	lineaDAO.addLinea(linea);
+    	return Response.ok().build();
+    }
+     
+    @GET
+    @Path("/{idProfesor}/lineas/{idLinea}")
+    @Produces("application/json")
+    public Response getLinea(@PathParam("idLinea") int idLinea){
+    	LineaDAO lineaDAO = factoria.getLineaDAO();
+    	Linea linea = lineaDAO.getLinea(idLinea);
+    	return Response.status(Status.OK).entity(linea).build();
+    }
+    
+    @GET
+    @Path("/{idProfesor}/lineas")
+    @Produces("application/json")
+    public Response getLineasProfesor(@PathParam("idProfesor") int idProfesor){
+    	LineaDAO lineaDAO = factoria.getLineaDAO();
+    	List<Linea> lineas = lineaDAO.getLineasProfesor(idProfesor);
+    	return Response.status(Status.OK).entity(lineas).build();
+    }
+    
+    @PUT
+    @Path("/{idProfesor}/lineas/{idLinea}")
+    @Consumes("application/json")
+    public Response updateLinea(@PathParam("idLinea") int idLinea,Linea linea){
+        LineaDAO lineaDAO = factoria.getLineaDAO();
+        int count = lineaDAO.updateLinea(idLinea,linea);
+        if(count==0){
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+        return Response.ok().build();
+    }
+    
+    @DELETE
+    @Path("/{idProfesor}/lineas/{idLinea}")
+    public Response deleteLinea(@PathParam("idLinea") int idLinea){
+        LineaDAO lineaDAO = factoria.getLineaDAO();
+        int count = lineaDAO.deleteLinea(idLinea);
+        if(count==0){
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+        return Response.ok().build();
+    }
+    
+    @POST
+    @Path("/{idProfesor}/lineas/{idLinea}/estudiantes/create")
+    @Consumes("application/json")
+    public Response addEstudiante(@PathParam("idLinea") int idLinea, 
+    							   Estudiante estudiante){
+        LineaDAO lineaDAO = factoria.getLineaDAO();
+        EstudianteDAO estudianteDAO = factoria.getEstudianteDAO();
+        Linea linea = lineaDAO.getLinea(idLinea);
+        estudiante.setLinea(linea);
+        estudianteDAO.addEstudiante(estudiante);
+        return Response.ok().build();
+    }
+    
+    @GET
+    @Path("/{idProfesor}/lineas/{idLinea}/estudiantes")
+    @Produces("application/json")
+    public Response getEstudiantesLinea(@PathParam("idLinea") int idLinea){
+    	EstudianteDAO estudianteDAO = factoria.getEstudianteDAO();
+    	List<Estudiante> estudiantes = estudianteDAO.getEstudiantesLinea(idLinea);
+    	return Response.status(Status.OK).entity(estudiantes).build();
+    }
+    
+       
+    @GET
+    @Path("/{idProfesor}/lineas/{idLinea}/estudiantes/{idEstudiante}")
+    @Produces("application/json")
+    public Response getEstudiante(@PathParam("idEstudiante") int idEstudiante){
+    	EstudianteDAO estudianteDAO = factoria.getEstudianteDAO();
+    	Estudiante estudiante = estudianteDAO.getEstudiante(idEstudiante);
+    	return Response.status(Status.OK).entity(estudiante).build();
+    	//return estudiante;
+    }
+    
+    @PUT
+    @Path("/{idProfesor}/lineas/{idLinea}/estudiantes/update/{idEstudiante}")
+    @Consumes("application/json")
+    public Response updateEstudiante(@PathParam("idEstudiante") int idEstudiante,Estudiante estudiante){
+        EstudianteDAO estudianteDAO = factoria.getEstudianteDAO();
+        int count = estudianteDAO.updateEstudiante(idEstudiante,estudiante);
+        if(count==0){
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+        return Response.ok().build();
+    }
+    
+    @DELETE
+    @Path("/{idProfesor}/lineas/{idLinea}/estudiantes/delete/{idEstudiante}")
+    public Response deleteEstudiante(@PathParam("idEstudiante") int idEstudiante){
+    	EstudianteDAO estudianteDAO = factoria.getEstudianteDAO();
+        int count = estudianteDAO.deleteEstudiante(idEstudiante);
+        if(count==0){
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+        return Response.ok().build();
+    }
+    
+    @PUT
+    @Path("/{idProfesor}/lineas/{idLinea}/estudiantes/calificar/update/{idEstudiante}")
+    @Consumes("application/json")
+    public Response calificarEstudiante(@PathParam("idEstudiante") int idEstudiante,Estudiante estudiante){
+        EstudianteDAO estudianteDAO = FactoriaDAO.getInstancia(FactoriaDAO.HIBERNATE).getEstudianteDAO();
+        estudiante.setEstadoTrabajo(EstadoTrabajo.ENTREGADO);
+        int count = estudianteDAO.calificarEstudiante(idEstudiante,estudiante);
+        if(count==0){
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+        return Response.ok().build();
+    }
+    
+    @POST
+    @Path("/{idProfesor}/lineas/{idLinea}/estudiantes/{idEstudiante}/reuniones/create")
+    @Consumes("application/json")
+    public Response addReunion(@PathParam("idEstudiante") int idEstudiante, 
+    							   Reunion reunion){
+        ReunionDAO reunionDAO = factoria.getReunionDAO();
+        EstudianteDAO estudianteDAO = factoria.getEstudianteDAO();
+        Estudiante estudiante = estudianteDAO.getEstudiante(idEstudiante);
+        reunion.setEstudiante(estudiante);
+        reunionDAO.addReunion(reunion);
+        return Response.ok().build();
+    }
+    
+    @GET
+    @Path("/{idProfesor}/lineas/{idLinea}/estudiantes/{idEstudiante}/reuniones/{idReunion}")
+    @Produces("application/json")
+    public Response getReunion(@PathParam("idReunion") int idReunion){
+    	ReunionDAO reunionDAO = factoria.getReunionDAO();
+    	Reunion reunion = reunionDAO.getReunion(idReunion);
+    	return Response.status(Status.OK).entity(reunion).build();
+    }
+    
+    @GET
+    @Path("/{idProfesor}/lineas/{idLinea}/estudiantes/{idEstudiante}/reuniones/")
+    @Produces("application/json")
+    public Response getReunionesEstudiante(@PathParam("idEstudiante") int idEstudiante){
+    	ReunionDAO reunionDAO = factoria.getReunionDAO();
+    	List<Reunion> reuniones = reunionDAO.getReunionesEstudiante(idEstudiante);
+    	return Response.status(Status.OK).entity(reuniones).build();
+    }
+    
+    
+    @PUT
+    @Path("/{idProfesor}/lineas/{idLinea}/estudiantes/{idEstudiante}/reuniones/update/{idReunion}")
+    @Consumes("application/json")
+    public Response updateReunion(@PathParam("idReunion") int idReunion,Reunion reunion){
+        ReunionDAO reunionDAO = factoria.getReunionDAO();
+        int count = reunionDAO.updateReunion(idReunion,reunion);
+        if(count==0){
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+        return Response.ok().build();
+    }
+    
+    @DELETE
+    @Path("/{idProfesor}/lineas/{idLinea}/estudiantes/{idEstudiante}/reuniones/delete/{idReunion}")
+    public Response deleteReunion(@PathParam("idReunion") int idReunion){
+    	ReunionDAO reunionDAO = factoria.getReunionDAO();
+        int count = reunionDAO.deleteReunion(idReunion);
+        if(count==0){
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+        return Response.ok().build();
+    }
+    
+    
+    
+}

@@ -1,0 +1,44 @@
+* {
+    box-sizing: border-box;
+}
+
+.main-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1;
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #28a745;
+    /* display: inline-block; */
+}
+
+@media (max-width: 576px) {
+    .navbar-brand {
+        font-size: 1rem;
+    }
+}
+
+@media (min-width: 576px) and (max-width: 768px){
+    .navbar-brand {
+        font-size: 1.2rem;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 992px){
+    .navbar-brand {
+        font-size: 1.5rem;
+    }
+    
+}
+
+@media (min-width: 992px){
+    .navbar-brand {
+        font-size: 1.7rem;
+    }
+}
+

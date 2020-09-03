@@ -1,0 +1,378 @@
+package services;
+ 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.security.Key;
+import java.util.Base64;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+ 
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
+import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.StreamingOutput;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.impl.crypto.MacProvider;
+import dao.EstudianteDAO;
+import dao.FactoriaDAO;
+import dao.LineaDAO;
+import dao.ProfesorDAO;
+import dao.ReunionDAO;
+import modelo.Credenciales;
+import modelo.EstadoTrabajo;
+import modelo.Estudiante;
+import modelo.Fichero;
+import modelo.Linea;
+import modelo.Profesor;
+import modelo.Reunion;
+import modelo.Validacion;
+import java.security.Key;
+ 
+
+@Path("/profesores")
+public class MyResource {
+	
+	private FactoriaDAO factoria = FactoriaDAO.getInstancia(FactoriaDAO.HIBERNATE);
+	private Validacion validacion = new Validacion();
+	public static Key clave;
+ 
+	
+	@POST
+	@Path("/login")
+	@Consumes("application/json")
+	@Produces(MediaType.TEXT_PLAIN)
+	public Response login(Credenciales credenciales){
+		byte[] usuarioBytes = Base64.getDecoder().decode(credenciales.getUsuario().getBytes());
+		byte[] contraseñaBytes = Base64.getDecoder().decode(credenciales.getContraseña().getBytes());
+		String usuario = new String(usuarioBytes);
+		String contraseña = new String(contraseñaBytes); 
+		System.out.println("El nombre del usuario es: "+ usuario);
+		System.out.println("La contraseña es: "+ contraseña);
+		ProfesorDAO profesorDAO = factoria.getProfesorDAO();
+		String token = "";
+		try {
+			clave = MacProvider.generateKey();
+			Profesor profesor = profesorDAO.autenticarProfesor(usuario,contraseña);
+			System.out.println("Profesor id: "+ profesor.getId() +" Nombre: "+ profesor.getNombre());
+			token = Jwts.builder()
+	        		.claim("idProfesor",profesor.getId())
+	        		.signWith(SignatureAlgorithm.HS512,clave)
+	        		.compact();
+			
+		} catch (Exception e) {
+			return Response.status(Response.Status.UNAUTHORIZED).build();
+		}
+        // Devolvemos el token en la cabecera "Authorization". 
+        return Response.ok().header(HttpHeaders.AUTHORIZATION, "Bearer " + token).entity(token).build();
+	}
+	
+	
+	@POST
+    @Consumes("application/json")
+	@Produces("application/json")
+    public Response addProfesor(Profesor profesor){
+		/*byte[] nombreBytes = Base64.getDecoder().decode(profesor.getNombre().getBytes());
+		profesor.setNombre(new String(nombreBytes));
+		byte[] apellidosBytes = Base64.getDecoder().decode(profesor.getApellidos().getBytes());
+		profesor.setApellidos(new String(apellidosBytes));
+		byte[] usuarioBytes = Base64.getDecoder().decode(profesor.getUsuario().getBytes());
+		profesor.setUsuario(new String(usuarioBytes));
+		byte[] contraseñaBytes = Base64.getDecoder().decode(profesor.getContraseña().getBytes());
+		profesor.setContraseña(new String(contraseñaBytes));*/
+		
+		if (validacion.validarProfesor(profesor)){
+			ProfesorDAO profesorDAO = factoria.getProfesorDAO();
+	        Profesor profesor1 = profesorDAO.addProfesor(profesor);
+	        if (profesor1 != null){
+	        	return Response.status(Status.OK).entity(profesor1).build();
+	        }
+		}
+		return Response.status(Status.BAD_REQUEST).build();
+    }
+	
+    @GET
+    @Path("/{idProfesor}")
+    @Produces("application/json")
+    public Response getProfesor(@PathParam("idProfesor") int id) {
+        ProfesorDAO profesorDAO = factoria.getProfesorDAO();
+        Profesor profesor = profesorDAO.getProfesor(id);
+        return Response.status(Status.OK).entity(profesor).build();
+    }
+    
+    @POST
+    @Path("/{idProfesor}/lineas")
+    @Consumes("application/json")
+    public Response addLinea(@PathParam("idProfesor") int idProfesor,Linea linea) {
+    	if (validacion.validarLinea(linea)){
+    		LineaDAO lineaDAO = factoria.getLineaDAO();
+        	ProfesorDAO profesorDAO = factoria.getProfesorDAO();
+        	Profesor profesor = profesorDAO.getProfesor(idProfesor);
+        	linea.setProfesor(profesor);
+        	boolean insertado = lineaDAO.addLinea(idProfesor,linea);
+        	if (insertado){
+        		return Response.ok().build();
+        	}
+    	}
+    	return Response.status(Status.BAD_REQUEST).build();	
+    }
+     
+    @GET
+    @Secured
+    @Path("/{idProfesor}/lineas/{idLinea}")
+    @Produces("application/json")
+    public Response getLinea(@PathParam("idLinea") int idLinea){
+    	LineaDAO lineaDAO = factoria.getLineaDAO();
+    	Linea linea = lineaDAO.getLinea(idLinea);
+    	return Response.status(Status.OK).entity(linea).build();
+    }
+    
+    @GET
+    @Secured
+    @Path("/{idProfesor}/lineas")
+    @Produces("application/json")
+    public Response getLineasProfesor(@PathParam("idProfesor") int idProfesor){
+    	LineaDAO lineaDAO = factoria.getLineaDAO();
+    	List<Linea> lineas = lineaDAO.getLineasProfesor(idProfesor);
+    	return Response.status(Status.OK).entity(lineas).build();
+    }
+    
+    @PUT
+    @Secured
+    @Path("/{idProfesor}/lineas/{idLinea}")
+    @Consumes("application/json")
+    public Response updateLinea(@PathParam("idLinea") int idLinea,Linea linea){
+    	if (validacion.validarLinea(linea)){
+    		LineaDAO lineaDAO = factoria.getLineaDAO();
+            int count = lineaDAO.updateLinea(idLinea,linea);
+            if(count==0){
+                return Response.status(Response.Status.BAD_REQUEST).build();
+            }
+            return Response.ok().build();
+    	}
+    	return Response.status(Response.Status.BAD_REQUEST).build();
+    }
+    
+    @DELETE
+    @Secured
+    @Path("/{idProfesor}/lineas/{idLinea}")
+    public Response deleteLinea(@PathParam("idLinea") int idLinea){
+        LineaDAO lineaDAO = factoria.getLineaDAO();
+        EstudianteDAO estudianteDAO = factoria.getEstudianteDAO();
+        ReunionDAO reunionDAO = factoria.getReunionDAO();
+        List<Estudiante> estudiantes = estudianteDAO.getEstudiantesLinea(idLinea);
+        for (Estudiante estudiante : estudiantes) {
+        	List<Reunion> reuniones = reunionDAO.getReunionesEstudiante(estudiante.getId());
+        	for (Reunion reunion : reuniones) {
+				reunionDAO.deleteReunion(reunion.getId());
+			}
+			estudianteDAO.deleteEstudiante(estudiante.getId());
+		}
+        int count = lineaDAO.deleteLinea(idLinea);
+        if(count==0){
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+        return Response.ok().build();
+    }
+    
+    @POST
+    @Path("/{idProfesor}/lineas/{idLinea}/estudiantes")
+    @Consumes("application/json")
+    public Response addEstudiante(@PathParam("idLinea") int idLinea, 
+    							   Estudiante estudiante){
+    	if (!validacion.validarEstudiante(estudiante)){
+    		return Response.status(Response.Status.BAD_REQUEST).build();
+    	}
+        LineaDAO lineaDAO = factoria.getLineaDAO();
+        EstudianteDAO estudianteDAO = factoria.getEstudianteDAO();
+        Linea linea = lineaDAO.getLinea(idLinea);
+        estudiante.setLinea(linea);
+        estudianteDAO.addEstudiante(estudiante);
+        return Response.ok().build();
+    }
+    
+    @GET
+    @Secured
+    @Path("/{idProfesor}/lineas/{idLinea}/estudiantes")
+    @Produces("application/json")
+    public Response getEstudiantesLinea(@PathParam("idLinea") int idLinea){
+    	EstudianteDAO estudianteDAO = factoria.getEstudianteDAO();
+    	List<Estudiante> estudiantes = estudianteDAO.getEstudiantesLinea(idLinea);
+    	return Response.status(Status.OK).entity(estudiantes).build();
+    }
+    
+       
+    @GET
+    @Secured
+    @Path("/{idProfesor}/lineas/{idLinea}/estudiantes/{idEstudiante}")
+    @Produces("application/json")
+    public Response getEstudiante(@PathParam("idEstudiante") int idEstudiante){
+    	EstudianteDAO estudianteDAO = factoria.getEstudianteDAO();
+    	Estudiante estudiante = estudianteDAO.getEstudiante(idEstudiante);
+    	return Response.status(Status.OK).entity(estudiante).build();
+    }
+    
+    @PUT
+    @Secured
+    @Path("/{idProfesor}/lineas/{idLinea}/estudiantes/{idEstudiante}")
+    @Consumes("application/json")
+    public Response updateEstudiante(@PathParam("idEstudiante") int idEstudiante,Estudiante estudiante){
+    	if (!validacion.validarEstudiante(estudiante)){
+    		return Response.status(Response.Status.BAD_REQUEST).build();
+    	}
+    	EstudianteDAO estudianteDAO = factoria.getEstudianteDAO();
+        int count = estudianteDAO.updateEstudiante(idEstudiante,estudiante);
+        if(count==0){
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+        return Response.ok().build();
+    }
+    
+    @DELETE
+    @Secured
+    @Path("/{idProfesor}/lineas/{idLinea}/estudiantes/{idEstudiante}")
+    public Response deleteEstudiante(@PathParam("idEstudiante") int idEstudiante){
+    	EstudianteDAO estudianteDAO = factoria.getEstudianteDAO();
+    	ReunionDAO reunionDAO = factoria.getReunionDAO();
+    	List<Reunion> reuniones = reunionDAO.getReunionesEstudiante(idEstudiante);
+    	for (Reunion reunion : reuniones) {
+			reunionDAO.deleteReunion(reunion.getId());
+		}
+        int count = estudianteDAO.deleteEstudiante(idEstudiante);
+        if(count==0){
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+        return Response.ok().build();
+    }
+    
+    @PUT
+    @Secured
+    @Path("/{idProfesor}/lineas/{idLinea}/estudiantes/{idEstudiante}/calificacion")
+    @Consumes("application/json")
+    public Response calificarEstudiante(@PathParam("idEstudiante") int idEstudiante,Estudiante estudiante){
+        EstudianteDAO estudianteDAO = FactoriaDAO.getInstancia(FactoriaDAO.HIBERNATE).getEstudianteDAO();
+        estudiante.setEstadoTrabajo(EstadoTrabajo.ENTREGADO);
+        int count = estudianteDAO.calificarEstudiante(idEstudiante,estudiante);
+        if(count==0){
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+        return Response.ok().build();
+    }
+    
+    @GET
+    @Secured
+    @Path("/{idProfesor}/fichero")
+    @Produces (MediaType.APPLICATION_OCTET_STREAM)
+    public Response getFichero(@QueryParam("fileName") String nameFile){
+    	final String fileName = nameFile;
+    	StreamingOutput fileStream =  new StreamingOutput() 
+        {
+            @Override
+            public void write(java.io.OutputStream output) throws IOException, WebApplicationException 
+            {
+                try
+                {
+                    java.nio.file.Path path = Paths.get(fileName);
+                    byte[] data = Files.readAllBytes(path);
+                    output.write(data);
+                    output.flush();
+                } 
+                catch (Exception e) 
+                {
+                    throw new WebApplicationException("File Not Found !!");
+                }
+            }
+        };
+        return Response
+                .ok(fileStream, MediaType.APPLICATION_OCTET_STREAM)
+                .header("Content-disposition","attachment; filename="+ nameFile)
+                .build();
+    }
+    
+    
+    
+    @POST
+    @Path("/{idProfesor}/lineas/{idLinea}/estudiantes/{idEstudiante}/reuniones")
+    @Consumes("application/json")
+    public Response addReunion(@PathParam("idEstudiante") int idEstudiante, 
+    							   Reunion reunion){
+    	if (!validacion.validarReunion(reunion)){
+    		return Response.status(Response.Status.BAD_REQUEST).build();
+    	}
+        ReunionDAO reunionDAO = factoria.getReunionDAO();
+        EstudianteDAO estudianteDAO = factoria.getEstudianteDAO();
+        Estudiante estudiante = estudianteDAO.getEstudiante(idEstudiante);
+        reunion.setEstudiante(estudiante);
+        reunionDAO.addReunion(reunion);
+        return Response.ok().build();
+    }
+    
+    @GET
+    @Secured
+    @Path("/{idProfesor}/lineas/{idLinea}/estudiantes/{idEstudiante}/reuniones/{idReunion}")
+    @Produces("application/json")
+    public Response getReunion(@PathParam("idReunion") int idReunion){
+    	ReunionDAO reunionDAO = factoria.getReunionDAO();
+    	Reunion reunion = reunionDAO.getReunion(idReunion);
+    	return Response.status(Status.OK).entity(reunion).build();
+    }
+    
+    @GET
+    @Secured
+    @Path("/{idProfesor}/lineas/{idLinea}/estudiantes/{idEstudiante}/reuniones/")
+    @Produces("application/json")
+    public Response getReunionesEstudiante(@PathParam("idEstudiante") int idEstudiante){
+    	ReunionDAO reunionDAO = factoria.getReunionDAO();
+    	List<Reunion> reuniones = reunionDAO.getReunionesEstudiante(idEstudiante);
+    	return Response.status(Status.OK).entity(reuniones).build();
+    }
+    
+    
+    @PUT
+    @Secured
+    @Path("/{idProfesor}/lineas/{idLinea}/estudiantes/{idEstudiante}/reuniones/{idReunion}")
+    @Consumes("application/json")
+    public Response updateReunion(@PathParam("idReunion") int idReunion,Reunion reunion){
+    	if (!validacion.validarReunion(reunion)){
+    		return Response.status(Response.Status.BAD_REQUEST).build();
+    	}
+        ReunionDAO reunionDAO = factoria.getReunionDAO();
+        int count = reunionDAO.updateReunion(idReunion,reunion);
+        if(count==0){
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+        return Response.ok().build();
+    }
+    
+    @DELETE
+    @Secured
+    @Path("/{idProfesor}/lineas/{idLinea}/estudiantes/{idEstudiante}/reuniones/{idReunion}")
+    public Response deleteReunion(@PathParam("idReunion") int idReunion){
+    	ReunionDAO reunionDAO = factoria.getReunionDAO();
+        int count = reunionDAO.deleteReunion(idReunion);
+        if(count==0){
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+        return Response.ok().build();
+    }
+    
+   
+    
+    
+    
+}

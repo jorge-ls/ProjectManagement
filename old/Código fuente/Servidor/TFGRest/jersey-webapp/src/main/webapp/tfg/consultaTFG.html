@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consulta de TFG</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/shared.css">
+    <link rel="stylesheet" href="css/main.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/consultaLinea.js"></script>
+    <script src="js/validation.js"></script>
+    <script src="js/header.js"></script>
+</head>
+<body>
+    <header class="main-header">
+        <nav class="navbar navbar-dark bg-dark justify-content-between">
+            <div>
+                <a href="index.html" class="navbar-brand">
+                    <!-- <img src="" alt="logo"> -->
+                    Project Manager
+                </a>
+            </div>
+            <a id="btn-logout" class="btn btn-outline-success botton-container__input btn-logout" href="login.html">Logout</a>
+        </nav>
+    </header>
+    <main class="container main-container">
+        <section class="form-section">
+            <div class="row justify-content-center align-items-center text-center title-container">
+                <h1 class="col-12 col-sm-6 col-md-7 display-4">Datos de la línea</h1>
+                <hr class="col-8 col-sm-6 col-md-7 col-lg-6 bg-success">   
+            </div>
+            <div class="row justify-content-center align-items-center main-row">
+                <div class="form-box col-sm-12 col-md-10">
+                    <form id="consulta-linea" class="form-container" method="post" action="index.html">
+                        <div class="row form-group">
+                            <label class="col-form-label col-10 col-sm-5 col-md-5 col-lg-5 form-group__label" for="tituloLinea" >Titulo</label>
+                            <input class="form-control col-10 col-sm-6 col-md-7 col-lg-7 form-group__input" type="text" id="tituloLinea" required> 
+                            <div id="feedback-titulo" class="valid-feedback offset-1 offset-sm-5 offset-md-5 offset-lg-5">Campo válido</div>
+                            <!-- <div class="invalid-feedback offset-1 offset-sm-5 offset-md-5 offset-lg-5">Este campo debe ser rellenado</div> -->
+                        </div>
+                        <div class="row form-group">
+                            <label class="col-form-label col-10 col-sm-5 col-md-5 col-lg-5 form-group__label" for="descripcion" >Descripcion</label>
+                            <textarea class="form-control col-10 col-sm-6 col-md-7 col-lg-7 form-group__input" id="descripcion" cols="40" rows="5" required></textarea>
+                            <div id="feedback-descripcion" class="valid-feedback offset-1 offset-sm-5 offset-md-5 offset-lg-5">Campo válido</div>
+                        </div>
+                        <div class="row form-group">
+                            <label class="col-form-label col-10 col-sm-5 col-md-5 col-lg-5 form-group__label" for="number">Máximo de estudiantes</label>
+                            <input class="form-control col-10 col-sm-6 col-md-7 col-lg-7 form-group__input" type="number" id="number" required>
+                            <div id="feedback-numero" class="valid-feedback offset-1 offset-sm-5 offset-md-5 offset-lg-5">Campo válido</div>
+                        </div>
+                        <div class="row form-group">
+                            <label class="col-form-label col-10 col-sm-5 col-md-5 col-lg-5 form-group__label" for="tipoLinea" >Tipo de línea</label>
+                            <select class="form-control col-10 col-sm-6 col-md-7 col-lg-7 form-group__input" id="tipoLinea" required>
+                                <option value="PROPUESTA_PROFESOR">Propuesta profesor</option>
+                                <option value="PRACTICA_EMPRESA">Practica empresa</option>
+                                <option value="ACUERDO_ESTUDIANTE">Acuerdo estudiante</option>
+                            </select>
+                            <div id="feedback-tipoLinea" class="valid-feedback offset-1 offset-sm-5 offset-md-5 offset-lg-5">Campo válido</div>
+                        </div>
+                        <div class="row mt-5 justify-content-center botton-container">    
+                            <input class="col-5 col-sm-3 col-md-3 col-lg-3 col-xl-2 mx-2 btn btn-success botton-container__input btn-aux" type="submit" value="Guardar cambios">
+                            <a class="col-4 col-sm-3 col-md-3 col-lg-3 col-xl-2 mx-2 btn btn-success botton-container__input btn-aux" href="index.html">Cancelar</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+        <section class="list-section">
+            <div class="row justify-content-center align-items-center text-center title-container">
+                <h1 class="col-12 col-sm-12 col-md-12 display-4">Estudiantes</h1>
+                <hr class="col-6 col-sm-5 col-md-5 bg-success">   
+            </div>
+            <div class="row time-row justify-content-center text-center">
+                <!-- <div class="col-10 col-xl-12 justify-content-center"> -->
+                    <h4 class="col-8 col-sm-5 col-md-4 col-lg-4 col-xl-3">Número de estudiantes</h4>
+                    <h4 id="numEstudiantes" class="col-1"></h4>
+                <!-- </div> -->
+            </div>
+            <div id="lista-estudiantes" class="row justify-content-center container-list">
+                
+                <!-- <div class="col-10 col-sm-10 col-md-10 bg-dark text-white container-list__item">
+                    <div class="row align-items-center my-row">
+                        <div class="col-sm-7 col-md-7 col-lg-6 col-xl-5">
+                            <div class="row align-items-center my-row">
+
+                                <h4 class="col-lg-12 col-xl-12 entry-title mb-2">Juan Antonio Fernandez Gonzalez</h4>
+                                <h4 class="col-xl-12 entry-title">Tiempo ( 60 min )</h4>
+                            </div>
+                        </div>
+                        <h4 class="col-lg-2 col-xl-2 entry-title">PENDIENTE</h4>
+                        <div class="col-sm-4 col-md-5 col-lg-5 col-xl-4">
+                            <div class="row botton-container">
+                                <a class="col-5 col-sm-12 col-md-5 btn btn-outline-success botton-container__input" href="consultaEstudiante.html">Ver detalles</a>
+                                <button class="col-5 col-sm-12 col-md-5 btn btn-outline-success botton-container__input" type="button"
+                                    data-toggle="modal" data-target="#eliminarEstudiante">Eliminar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
+                <!-- <div class="col-10 col-sm-10 col-md-10 bg-dark text-white container-list__item">
+                    <div class="row align-items-center my-row">
+                        <div class="col-sm-7 col-md-7 col-lg-7 col-xl-8">
+                            <div class="row align-items-center my-row">
+                                <h4 class="col-xl-6 entry-title">Jose Antonio Lopez Martinez</h4>
+                                <h4 class="col-xl-3 entry-title">( 60 min )</h4>
+                                <h4 class="col-xl-5 entry-title estado-estudiante">ENTREGADO</h4>
+                            </div>
+                        </div>
+                        <div class="col-sm-4 col-md-5 col-lg-5 col-xl-4">
+                            <div class="row botton-container">
+                                <a class="col-5 col-sm-12 col-md-5 btn btn-outline-success botton-container__input" href="consultaEstudiante.html">Ver detalles</a>
+                                <button class="col-5 col-sm-12 col-md-5 btn btn-outline-success botton-container__input" type="button"
+                                    data-toggle="modal" data-target="#eliminarEstudiante">Eliminar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
+            </div>
+            <div class="row container-list__btn mt-4">
+                <a class="col-6 col-sm-4 col-md-3 col-xl-2 btn btn-lg btn-success mx-2 botton-container__input btn-aux" href="registroEstudiante.html">Registrar estudiante</a>
+            </div>
+        </section>
+        
+    </main>
+    <footer class="main-footer page-footer text-center">
+        <p>Desarrollado por Jorge Lopez Saura</p>
+    </footer>
+
+    <div id="eliminarEstudiante" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title text-center">¿Seguro que desea eliminar al estudiante seleccionado?</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p>Si elimina el estudiante se borraran todos los datos asociados</p>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button id="button-eliminar" type="button" class="btn btn-success modal-btn botton-container__input" data-dismiss="modal">Eliminar</button>
+                  </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="update-success-linea" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title text-center">Enhorabuena</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p>Los datos de la línea se han actualizado correctamente</p>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-success modal-btn botton-container__input" data-dismiss="modal">Aceptar</button>
+                  </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+</body>
+</html>

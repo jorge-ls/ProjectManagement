@@ -1,0 +1,120 @@
+package dao;
+ 
+import java.util.List;
+ 
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+
+import modelo.Linea;
+import modelo.Profesor;
+ 
+public class LineaHibernateDAO implements LineaDAO {
+    
+    public boolean addLinea(int idProfesor,Linea bean){
+        Session session = SessionUtil.getSession();        
+        Transaction tx = session.beginTransaction();
+        if (!existeLinea(idProfesor,bean.getTitulo())){
+        	addLinea(session,bean);
+        	tx.commit();
+        	return true;
+        }
+        session.close();
+        return false;
+        
+    }
+    
+    public void addLinea(Session session, Linea bean){
+        Linea linea = new Linea();
+        linea.setTitulo(bean.getTitulo());
+        linea.setDescripcion(bean.getDescripcion());
+        linea.setProfesor(bean.getProfesor());
+        linea.setTipoLinea(bean.getTipoLinea());
+        linea.setMaxEstudiantes(bean.getMaxEstudiantes());
+        session.save(linea);
+    }
+    
+    public List<Linea> getLineas(){
+        Session session = SessionUtil.getSession();    
+        Query query = session.createQuery("from Linea");
+        List<Linea> lineas = query.list();
+        session.close();
+        return lineas;
+    }
+    
+    public List<Linea> getLineasProfesor(int idProfesor){
+    	 Session session = SessionUtil.getSession();
+    	 String hql = "from Linea where profesor = :profesor";
+    	 Query query = session.createQuery(hql);
+    	 query.setInteger("profesor",idProfesor);
+    	 List<Linea> lineas = query.list();
+    	 for (Linea linea : lineas) {
+    		 Long numEstudiantes = this.getNumEstudiantesLinea(session,linea.getId());
+    		 linea.setNumEstudiantes(numEstudiantes);
+		}
+    	 return lineas; 
+    }
+    
+    public Long getNumEstudiantesLinea(Session session, int idLinea){
+    	String hql = "select count(*) from Estudiante where linea = :idLinea ";
+    	Query query2 = session.createQuery(hql);
+		query2.setInteger("idLinea",idLinea);
+		Long numEstudiantes = (Long)query2.uniqueResult();
+		return numEstudiantes;
+    }
+    
+    public boolean existeLinea(int idProfesor,String titulo){
+    	List<Linea> lineas = this.getLineasProfesor(idProfesor);
+    	for (Linea linea : lineas) {
+			if (linea.getTitulo().equals(titulo)){
+				return true;
+			}
+		}
+    	return false;
+    }
+    
+    public Linea getLinea (int id){
+    	 Session session = SessionUtil.getSession();
+    	 String hql = "from Linea where id = :id";
+         Query query = session.createQuery(hql);
+         query.setInteger("id",id);
+         Linea linea = (Linea) query.list().get(0);
+         Long numEstudiantes = this.getNumEstudiantesLinea(session, id);
+         linea.setNumEstudiantes(numEstudiantes);
+         session.close();
+         return linea;
+    }
+ 
+    public int deleteLinea(int id) {
+        Session session = SessionUtil.getSession();
+        Transaction tx = session.beginTransaction();
+        String hql = "delete from Linea where id = :id";
+        Query query = session.createQuery(hql);
+        query.setInteger("id",id);
+        int rowCount = query.executeUpdate();
+        System.out.println("Rows affected: " + rowCount);
+        tx.commit();
+        session.close();
+        return rowCount;
+    }
+    
+    public int updateLinea(int id, Linea linea){
+         if(id <=0)  
+           return 0;  
+         Session session = SessionUtil.getSession();
+            Transaction tx = session.beginTransaction();
+            String hql = "update Linea set titulo = :titulo, descripcion = :descripcion, "
+            		+ "maxEstudiantes = :maxEstudiantes, tipoLinea = :tipoLinea where id = :id";
+            Query query = session.createQuery(hql);
+            query.setInteger("id",id);
+            query.setString("titulo",linea.getTitulo());
+            query.setString("descripcion",linea.getDescripcion());
+            query.setInteger("maxEstudiantes", linea.getMaxEstudiantes());
+            query.setString("tipoLinea", linea.getTipoLinea().toString());
+            int rowCount = query.executeUpdate();
+            System.out.println("Rows affected: " + rowCount);
+            tx.commit();
+            session.close();
+            return rowCount;
+    }
+}

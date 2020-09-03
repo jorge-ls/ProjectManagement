@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de línea de TFG</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/shared.css">
+    <link rel="stylesheet" href="css/main.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <script src="js/config.js"></script>
+    <script src="js/registroLinea.js"></script>
+    <script src="js/validation.js"></script>
+    <script src="js/header.js"></script>
+</head>
+<body>
+    <header class="main-header">
+        <nav class="navbar navbar-dark bg-dark justify-content-between">
+            <div>
+                <a href="index.html" class="navbar-brand">
+                    <!-- <img src="" alt="logo"> -->
+                    Project Manager
+                </a>
+            </div>
+            <a id="btn-logout" class="btn btn-outline-success botton-container__input btn-logout" href="login.html">Logout</a>
+        </nav>
+    </header>
+    <main class="container">
+        <div class="form-section">
+                <div class="row justify-content-center align-items-center text-center title-container">
+                    <h1 class="col-12 col-sm-6 col-md-7 display-4">Nueva línea</h1>
+                    <hr class="col-6 col-sm-6 col-md-6 col-lg-5 col-xl-5 bg-success">    
+                </div>
+                <div class="row justify-content-center align-items-center main-row">
+                <div class="form-box col-sm-12 col-md-10 col-lg-10">
+                    <form id="registro-linea" class="form-container" method="post" action="index.html" novalidate>
+                        <div class="row form-group">
+                            <label class="col-form-label col-10 col-sm-5 col-md-5 col-lg-4 form-group__label" for="tituloLinea" >Titulo *</label>
+                            <input class="form-control col-10 col-sm-6 col-md-7 col-lg-7 form-group__input" type="text" id="tituloLinea" required> 
+                            <div id="feedback-titulo" class="valid-feedback offset-1 offset-sm-5 offset-md-5 offset-lg-4">Campo válido</div>
+                        </div>
+                        <div class="row form-group">
+                            <label class="col-form-label col-10 col-sm-5 col-md-5 col-lg-4 form-group__label" for="descripcion" >Descripcion *</label>
+                            <textarea class="form-control col-10 col-sm-6 col-md-7 col-lg-7 form-group__input" id="descripcion" cols="40" rows="5" required></textarea>
+                            <div id="feedback-descripcion" class="valid-feedback offset-1 offset-sm-5 offset-md-5 offset-lg-4">Campo válido</div>
+                        </div>
+                        <div class="row form-group">
+                            <label class="col-form-label col-10 col-sm-5 col-md-5 col-lg-4 form-group__label" for="number">Máximo de estudiantes *</label>
+                            <input class="form-control col-10 col-sm-6 col-md-7 col-lg-7 form-group__input" type="number" id="number" required>
+                            <div id="feedback-numero" class="valid-feedback offset-1 offset-sm-5 offset-md-5 offset-lg-4">Campo válido</div>
+                        </div>
+                        <div class="row form-group">
+                            <label id="selectLabel" class="col-form-label col-10 col-sm-5 col-md-5 col-lg-4 form-group__label" for="tipoLinea" >Tipo de línea *</label>
+                            <select class="form-control col-10 col-sm-6 col-md-7 col-lg-7 form-group__input" id="tipoLinea" required>
+                                <option value="PROPUESTA_PROFESOR">Propuesta profesor</option>
+                                <option value="PRACTICA_EMPRESA">Practica empresa</option>
+                                <option value="ACUERDO_ESTUDIANTE">Acuerdo estudiante</option>
+                            </select>
+                            <div id="feedback-tipoLinea" class="valid-feedback offset-1 offset-sm-5 offset-md-5 offset-lg-4">Campo válido</div>
+                        </div>
+                        <div class="row mt-5 justify-content-center botton-container">    
+                            <input class="col-4 col-sm-3 col-md-3 col-lg-2 btn btn-success botton-container__input" type="submit" value="Registrar">
+                            <a class="col-4 col-sm-3 col-md-3 col-lg-2 btn btn-success botton-container__input" href="index.html">Cancelar</a>
+                        </div>
+                    </form>
+                </div>
+                </div>
+        </div>
+    </main>
+    <footer class="main-footer page-footer text-center">
+        <p>Desarrollado por Jorge Lopez Saura</p>
+    </footer>
+
+    <div id="success-linea" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title text-center">Enhorabuena</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p>Se ha registrado la linea correctamente</p>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-success modal-btn botton-container__input" data-dismiss="modal">Aceptar</button>
+                  </div>
+            </div>
+        </div>
+    </div>
+
+    
+
+</body>
+</html>
