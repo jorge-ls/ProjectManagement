@@ -1,0 +1,184 @@
+{
+  "repo_notes": [
+    {
+      "content": ""
+    }
+  ],
+  "pages": [
+    {
+      "title": "Overview",
+      "purpose": "Introduce the ProjectManagement (TFG) system: a Java JAX-RS/Jersey REST backend with Hibernate persistence over MySQL, plus a static HTML/JS web front-end, deployed as jersey-webapp.war into Tomcat via Docker Compose. Explain repo layout ('old/Código fuente/Servidor/TFGRest', db/, tomcat/, docker-compose.yml) and link to child pages.",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "Domain Model and Concepts",
+      "purpose": "Explain the academic domain: Profesor, Linea (project line), Estudiante, Reunion, EstadoTrabajo, TipoLinea, TipoReunion, Credenciales, Fichero — and how they map to DB tables.",
+      "parent": "Overview",
+      "page_notes": [
+        {
+          "content": "Show the content with emojis and well-organized structure"
+        }
+      ]
+    },
+    {
+      "title": "Getting Started / Running Locally",
+      "purpose": "How to build the WAR (Maven pom.xml), deploy into ./tomcat, run docker-compose (mysql_tfg, web, adminer), and initialize the DB from db/tfg.sql.",
+      "parent": "Overview",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "REST Backend (Jersey Web Application)",
+      "purpose": "Overview of the server-side application: JAX-RS resources, security filter, DAO layer, and model classes. Links to child pages.",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "REST API Endpoints (MyResource)",
+      "purpose": "Document services/MyResource.java: /profesores resource tree, login, professor registration, nested /lineas, /estudiantes, /reuniones endpoints, file upload/download (Fichero), status codes and JSON payloads.",
+      "parent": "REST Backend (Jersey Web Application)",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "Authentication and Authorization",
+      "purpose": "JWT issuance in login (jjwt, MacProvider key), the @Secured annotation and RestSecurityFilter, Authorization: Bearer headers, and per-professor ownership checks (hasAccessLinea).",
+      "parent": "REST Backend (Jersey Web Application)",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "Persistence Layer (DAO + Hibernate)",
+      "purpose": "Overview of the dao package: FactoriaDAO abstract factory, Hibernate implementations, SessionUtil. Links to children.",
+      "parent": "REST Backend (Jersey Web Application)",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "DAO Factory and Interfaces",
+      "purpose": "FactoriaDAO/FactoriaHibernateDAO pattern and the ProfesorDAO, LineaDAO, EstudianteDAO, ReunionDAO contracts.",
+      "parent": "REST Backend (Jersey Web Application)",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "Hibernate Sessions and Mappings",
+      "purpose": "SessionUtil/SessionFactory bootstrapping, hibernate configuration, entity annotations/mappings, transaction handling and cascade behaviour.",
+      "parent": "REST Backend (Jersey Web Application)",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "Validation and Model Classes",
+      "purpose": "modelo package: entity beans, enums (EstadoTrabajo, TipoLinea, TipoReunion), Credenciales, Fichero, and Validacion input-validation rules used by the resource layer.",
+      "parent": "REST Backend (Jersey Web Application)",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "Web Front-End",
+      "purpose": "Overview of the static client under src/main/webapp/tfg: HTML pages, CSS, and JavaScript that consume the REST API. Links to child pages.",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "Pages and Navigation",
+      "purpose": "index.html, login.html, registro*.html (registroTFG, registroEstudiante, registroReunion), consulta*.html, calificar.html, index.jsp; shared header and CSS (login.css, main.css, shared.css).",
+      "parent": "Web Front-End",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "Client-Side JavaScript and API Access",
+      "purpose": "js/config.js base URL, login.js token storage, header.js, registro*/consulta* scripts, validation.js, and paginathing.js pagination; AJAX patterns and auth header usage.",
+      "parent": "Web Front-End",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "Database and Deployment Infrastructure",
+      "purpose": "Overview of persistence and runtime infrastructure. Links to child pages.",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "MySQL Schema (db/tfg.sql)",
+      "purpose": "Table-by-table walkthrough of profesor, linea, estudiante, reunion, keys, cascading deletes and charset/engine choices.",
+      "parent": "Database and Deployment Infrastructure",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "Docker Compose Environment",
+      "purpose": "Services db (mysql_tfg), web (tomcat) and adminer, port mappings, volumes (./db init scripts, ./tomcat webapps), credentials and service links.",
+      "parent": "Database and Deployment Infrastructure",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "Build and WAR Packaging",
+      "purpose": "Maven pom.xml dependencies (Jersey, Hibernate, MySQL connector, jjwt), WAR structure (WEB-INF/web.xml, classes, lib) and deployment flow of jersey-webapp.war.",
+      "parent": "Database and Deployment Infrastructure",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "Glossary",
+      "purpose": "Define 15-30 codebase-specific terms with code pointers: TFG, Profesor, Linea, Estudiante, Reunion, Vocales, estadoTrabajo, fechaEstimada, urlGit, urlInforme, urlMemoriaFinal, tipoLinea, tipoReunion, Credenciales, Validacion, FactoriaDAO, SessionUtil, @Secured, RestSecurityFilter, MyResource, JAX-RS, Jersey, WAR, adminer, mysql_tfg, paginathing, Eclipse .metadata/.history.",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    }
+  ]
+}
